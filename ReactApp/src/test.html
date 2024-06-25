@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <h1>Hello World</h1>
+  <body>
+    <form id="claimForm">
+      <div class="form-group">
+        <label for="policy-select">Policy Number:</label>
+        <select
+          id="policy-select"
+          name="policyNumber"
+          class="form-control"
+          required
+        >
+          <option
+            disabled
+            selected
+            hidden
+          >
+            Select a Policy Plan
+          </option>
+          <!-- Options will be dynamically populated here -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="claimantName">Recipient Name:</label>
+        <input
+          type="text"
+          id="claimantName"
+          name="claimantName"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="dateOfService">Current Date:</label>
+        <input
+          type="date"
+          id="currentDate"
+          name="dateOfService"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <!-- New radio button section -->
+      <div class="form-group">
+        <label for="serviceType">Type of Service:</label>
+        <div>
+          <input
+            type="radio"
+            id="serviceType1"
+            name="serviceType"
+            value="type1"
+            required
+          />
+          <label for="serviceType1">Service Type 1</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="serviceType2"
+            name="serviceType"
+            value="type2"
+            required
+          />
+          <label for="serviceType2">Service Type 2</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="serviceType3"
+            name="serviceType"
+            value="type3"
+            required
+          />
+          <label for="serviceType3">Service Type 3</label>
+        </div>
+      </div>
+
+      <div id="uploadFieldsContainer">
+        <div class="upload-fields">
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label for="dateOfServiceStart">Date of Service (Start):</label>
+              <input
+                type="date"
+                class="form-control date-of-service-start"
+                name="dateOfServiceStart[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="dateOfServiceEnd">Date of Service (End):</label>
+              <input
+                type="date"
+                class="form-control date-of-service-end"
+                name="dateOfServiceEnd[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="placeOfService">Place of Service:</label>
+              <input
+                type="text"
+                class="form-control place-of-service"
+                name="placeOfService[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="cptCode">CPT Code for Session:</label>
+              <input
+                type="text"
+                class="form-control cpt-code"
+                name="cptCode[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="modifiers">Modifiers:</label>
+              <input
+                type="text"
+                class="form-control modifiers"
+                name="modifiers[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-2">
+              <label for="diagnosis">Diagnosis:</label>
+              <input
+                type="text"
+                class="form-control diagnosis"
+                name="diagnosis[]"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label for="charges">Charge for Service:</label>
+              <input
+                type="number"
+                class="form-control charges"
+                name="charges[]"
+                required
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="fileInput">Upload Supporting Document:</label>
+              <input
+                type="file"
+                class="form-control file-input"
+                name="fileInput[]"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="custom-bottom-margin">
+        <button
+          type="button"
+          id="addUploadFieldButton"
+          class="btn btn-primary mr-1"
+        >
+          Add Another Service
+        </button>
+        <button
+          type="button"
+          id="submitClaimButton"
+          class="btn btn-success"
+        >
+          Submit Claim
+        </button>
+      </div>
+    </form>
+  </body>
+</html>
