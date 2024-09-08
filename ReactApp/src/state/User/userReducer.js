@@ -5,6 +5,7 @@ let initialState = {
     _id: '',
     userName: 'Dummy',
     password: 'asdsadasda',
+    email: 'placeholder@gmail.com',
     street: 'somewhere on earth',
     mobile: 898989898,
     hobbies: [],

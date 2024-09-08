@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import './app.css';
 import {
   BrowserRouter as Router,
@@ -13,14 +13,14 @@ import Header from './Common/HeaderComponent';
 import About from './Common/AboutComponent';
 import NotFound from './Common/NotFoundComponent';
 
-import UserHook from './Application/User/UserHookComponent';
-import Student from './Application/Student/StudentComponent';
-import Hobby from './Application/Student/HobbyComponent';
-import Product from './Application/Product/ProductComponent';
-import Store from './Application/Shop/ShopComponent';
-import CartDetail from './Application/Cart/CartDetailComponent';
-import Coupon from './Application/Coupon/CouponComponent';
-import Order from './Application/Order/OrderComponent';
+let UserHook = lazy(() => import('./Application/User/UserHookComponent'));
+let Student = lazy(() => import('./Application/Student/StudentComponent'));
+let Hobby = lazy(() => import('./Application/Student/HobbyComponent'));
+let Product = lazy(() => import('./Application/Product/ProductComponent'));
+let Store = lazy(() => import('./Application/Shop/ShopComponent'));
+let CartDetail = lazy(() => import('./Application/Cart/CartDetailComponent'));
+let Coupon = lazy(() => import('./Application/Coupon/CouponComponent'));
+let Order = lazy(() => import('./Application/Order/OrderComponent'));
 
 export default class ApplicationComponent extends Component {
   //props - is the set of properties html + js which needs to be available in every component
@@ -49,74 +49,75 @@ export default class ApplicationComponent extends Component {
     return (
       <Router>
         <div>
-          {/* <b>userName : {this.state.name}</b> */}
-          <Header userName={this.state.name} />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home
-                  parentName1={this.state.name}
-                  updateNameInParent={this.updateName}
-                />
-              }
-            />
-            <Route
-              path="home"
-              element={
-                <Home
-                  parentName1={this.state.name}
-                  updateNameInParent={this.updateName}
-                />
-              }
-            />
-            {/* <Route path="user" element={<UserComponent />}/> */}
-            <Route
-              path="user"
-              element={<UserHook />}
-            />
-            <Route
-              path="about"
-              element={<About />}
-            />
-            <Route
-              path="about/:id"
-              element={<About />}
-            />
-            <Route
-              path="hobby"
-              element={<Hobby />}
-            />
-            <Route
-              path="product"
-              element={<Product />}
-            />
-            <Route
-              path="student"
-              element={<Student />}
-            />
-            <Route
-              path="store"
-              element={<Store />}
-            />
-            <Route
-              path="cartDetail"
-              element={<CartDetail />}
-            />
-            <Route
-              path="coupon"
-              element={<Coupon />}
-            />
-            <Route
-              path="order"
-              element={<Order />}
-            />
-            <Route
-              path="*"
-              element={<NotFound />}
-            />
-          </Routes>
-          <Footer />
+          <Suspense fallback={<div>Loading... </div>}>
+            <Header userName={this.state.name} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    parentName1={this.state.name}
+                    updateNameInParent={this.updateName}
+                  />
+                }
+              />
+              <Route
+                path="home"
+                element={
+                  <Home
+                    parentName1={this.state.name}
+                    updateNameInParent={this.updateName}
+                  />
+                }
+              />
+              {/* <Route path="user" element={<UserComponent />}/> */}
+              <Route
+                path="user"
+                element={<UserHook />}
+              />
+              <Route
+                path="about"
+                element={<About />}
+              />
+              <Route
+                path="about/:id"
+                element={<About />}
+              />
+              <Route
+                path="hobby"
+                element={<Hobby />}
+              />
+              <Route
+                path="product"
+                element={<Product />}
+              />
+              <Route
+                path="student"
+                element={<Student />}
+              />
+              <Route
+                path="store"
+                element={<Store />}
+              />
+              <Route
+                path="cartDetail"
+                element={<CartDetail />}
+              />
+              <Route
+                path="coupon"
+                element={<Coupon />}
+              />
+              <Route
+                path="order"
+                element={<Order />}
+              />
+              <Route
+                path="*"
+                element={<NotFound />}
+              />
+            </Routes>
+            <Footer />
+          </Suspense>
         </div>
       </Router>
     );

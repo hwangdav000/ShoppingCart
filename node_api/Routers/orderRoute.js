@@ -1,8 +1,10 @@
 let express = require('express');
+const { v4: uuidv4 } = require('uuid');
 let orderRouter = express.Router({}); //
 const { authenticateToken } = require('../Authentication/authenticate');
-
-let OrderDataModel = require('../DataModels/OrderDataModel'); //this gives access to all the methods defined in mongoose to access mongo db data
+const { generatePDFAndSave } = require('../GeneratePDF/generatePdf');
+const { uploadPDFToS3 } = require('../AWS/aws');
+let OrderDataModel = require('../DataModels/OrderDataModel');
 
 orderRouter.post('/api/saveorder', authenticateToken, async (req, res) => {
   console.log(req.body);
@@ -80,6 +82,28 @@ orderRouter.post(
         console.log('Error finding order:', err);
         res.status(500).send('Error finding order');
       });
+  }
+);
+
+orderRouter.post(
+  '/api/generateOrderPDF',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      console.log('generating order pdf');
+      const { message } = req.body;
+      const pdf = await generatePDFAndSave(message);
+
+      // generate unique id
+      const uniqueId = uuidv4();
+
+      const url = await uploadPDFToS3(pdf, `orderPDF_${uniqueId}`);
+      console.log('the url is ' + url);
+      res.status(200).send(url);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      res.status(500).send('Error generating PDF.');
+    }
   }
 );
 

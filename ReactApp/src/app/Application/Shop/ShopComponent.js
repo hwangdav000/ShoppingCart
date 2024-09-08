@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   getCartFromDB,
+  SaveCartToDB,
   SaveCartToDB2,
 } from '../../../state/Cart/cartAction.js';
 import { AddNotification } from '../../../state/Notification/notificationAction.js';
@@ -77,7 +78,7 @@ const Shop = () => {
     };
 
     if (user._id !== '') {
-      dispatchToDB(SaveCartToDB2(newCart, accessToken));
+      dispatchToDB(SaveCartToDB(newCart, accessToken));
     } else {
       alert('Please Sign In to Add to Cart');
     }

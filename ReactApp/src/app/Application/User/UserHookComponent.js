@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 const UserHook = (props) => {
   let [uName, setUserName] = useState('');
   let [pass, setPassword] = useState('');
+  let [email, setEmail] = useState('');
   let [street, setStreet] = useState('');
   let [mobile, setPhone] = useState('');
 
@@ -31,12 +32,13 @@ const UserHook = (props) => {
     let newUser = {
       userName: uName,
       password: pass,
+      email,
       street,
       mobile,
     };
     dispatchToDB(SaveUserToDBUsingFetch(newUser));
 
-    alert('user has signed up');
+    alert('please sign in');
   };
 
   const loginUser = (evt) => {
@@ -114,6 +116,27 @@ const UserHook = (props) => {
                 value={pass}
                 placeholder="Password"
                 onChange={(evt) => setPassword(evt.target.value)}
+                maxLength={40}
+              />
+            </Col>
+          </Form.Group>
+
+          <Form.Group
+            as={Row}
+            className="mb-3"
+          >
+            <Form.Label
+              column
+              sm={2}
+            >
+              <b>Email:</b>
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                value={email}
+                placeholder="Email"
+                onChange={(evt) => setEmail(evt.target.value)}
                 maxLength={40}
               />
             </Col>

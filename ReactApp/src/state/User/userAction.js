@@ -92,7 +92,7 @@ export const SaveUserToDBUsingFetch = (newUser) => {
       })
       .then((response) => response.json())
       .then((userData) => {
-        dispatch(AddUserToStore(userData));
+        //dispatch(AddUserToStore(userData));
         return true;
       })
       .catch((err) => {

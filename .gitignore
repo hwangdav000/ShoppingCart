@@ -1,2 +1,5 @@
 /node_api/node_modules
+/node_api/.env
 /ReactApp/node_modules
+/ReactApp/.env
+/ReactApp/dist

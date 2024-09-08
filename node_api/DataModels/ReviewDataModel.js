@@ -9,12 +9,12 @@ let reviewSchema = new schemaObj(
     productId: {
       type: mongooseObj.Schema.Types.ObjectId,
       required: true,
-      ref: 'products',
+      ref: 'product',
     },
     userId: {
       type: mongooseObj.Schema.Types.ObjectId,
       required: true,
-      ref: 'users',
+      ref: 'user',
     },
     rating: Number,
     comment: String,

@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ClearCartToDB } from '../../../state/Cart/cartAction.js';
 import { Button, Form } from 'react-bootstrap';
-import { SaveOrderToDB } from '../../../state/Order/orderAction.js';
+import {
+  SaveOrderToDB,
+  GenerateOrderPDF,
+} from '../../../state/Order/orderAction.js';
 
 const CartTotal = (props) => {
   const accessToken = useSelector((store) => store.tokenReducer.accessToken);
@@ -26,6 +29,37 @@ const CartTotal = (props) => {
 
   const dispatchToDB = useDispatch();
 
+  // Generate the cart details message
+  const generateCartMessage = () => {
+    let message = `Your cart contains the following items:\n\n`;
+    cartItems.forEach((item) => {
+      message += `Product: ${item.name}\nQuantity: ${
+        item.quantity
+      }\nPrice: $${item.price.toFixed(2)}\n\n`;
+    });
+    message += `Total Price: $${totalPrice.toFixed(2)}\n`;
+    message += `User Address: ${user.street}\n`;
+    if (couponApplied) {
+      message += `Coupon Used: ${couponValue}`;
+    }
+
+    return message;
+  };
+
+  // Send the email with the cart details
+  const sendEmail = () => {
+    if (user.email == null || user.email == '') {
+      console.log('user email is not set');
+      return;
+    }
+
+    const cartMessage = generateCartMessage();
+
+    //generate PDF
+    console.log('dispatching to generate order pdf');
+    dispatchToDB(GenerateOrderPDF(cartMessage, user.email, accessToken));
+  };
+
   // Function to map current cart items to products
   const mapCartListToProducts = () => {
     if (cartList.length > 0) {
@@ -37,7 +71,7 @@ const CartTotal = (props) => {
           if (product) {
             return {
               productId: product._id,
-              name: product.name,
+              name: product.productName,
               price: product.price,
               quantity: item.quantity,
             };
@@ -84,6 +118,7 @@ const CartTotal = (props) => {
       alert('Please sign in to save the cart!!!');
     } else {
       dispatchToDB(SaveOrderToDB(newOrder, accessToken));
+      sendEmail();
       alert('Cart has been purchased');
 
       // need to clear the cart
@@ -93,6 +128,8 @@ const CartTotal = (props) => {
 
   useEffect(() => {
     mapCartListToProducts();
+    console.log(cartList);
+    console.log(products);
   }, [cartList, products]);
 
   return (

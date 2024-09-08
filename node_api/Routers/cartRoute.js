@@ -4,36 +4,23 @@ const { authenticateToken } = require('../Authentication/authenticate');
 
 let CartDataModel = require('../DataModels/CartDataModel'); //this gives access to all the methods defined in mongoose to access mongo db data
 
-cartRouter.post('/api/savecart', authenticateToken, (req, res) => {
-  // can overwrite cart
-  CartDataModel.findOne({ userId: req.body.userId })
-    .then((existingCart) => {
-      if (existingCart) {
-        existingCart.cartItems = req.body.cartItems;
-        existingCart
-          .save()
-          .then((updatedCart) => {
-            console.log('updated cart ', updatedCart);
-            res.send(existingCart);
-          })
-          .catch((err1) => {
-            console.log('error updating cart ', err1);
-            res.send('error updating cart');
-          });
-      } else {
-        //if cart object is not present
-        let newCart = new CartDataModel(req.body);
+cartRouter.post('/api/savecart', authenticateToken, async (req, res) => {
+  try {
+    const { userId, cartItems } = req.body;
 
-        newCart.save().then((newCart) => {
-          //will get _id once document is created
-          res.send(newCart);
-        });
-      }
-    })
-    .catch((err) => {
-      console.log('err', err);
-      res.send('error while adding cart');
-    });
+    // Find and update or create a new cart if it doesn't exist
+    const updatedCart = await CartDataModel.findOneAndUpdate(
+      { userId: userId },
+      { cartItems: cartItems },
+      { new: true, upsert: true } // upsert: true creates a new cart if one doesn't exist
+    );
+
+    console.log('Updated or created cart: ', updatedCart);
+    res.status(200).json(updatedCart);
+  } catch (err) {
+    console.error('Error saving cart:', err);
+    res.status(500).json({ error: 'Error saving cart' });
+  }
 });
 
 cartRouter.get('/api/getCart/:userId', authenticateToken, (req, res) => {
@@ -42,17 +29,18 @@ cartRouter.get('/api/getCart/:userId', authenticateToken, (req, res) => {
   CartDataModel.findOne({ userId: userId })
     .then((cart) => {
       if (cart) {
+        console.log('Retrieved cart:', cart.cartItems);
         res.send(cart.cartItems);
       } else {
-        console.log('cart not found');
+        console.log('Cart not found');
+        res.send([]);
       }
     })
     .catch((err) => {
-      console.log('err cart', err);
-      res.send('error while getting cart');
+      console.error('Error while getting cart:', err);
+      res.status(500).send('Error while getting cart');
     });
 });
-
 // clear cart
 cartRouter.delete('/api/clearCart/:userId', authenticateToken, (req, res) => {
   const userId = req.params.userId;

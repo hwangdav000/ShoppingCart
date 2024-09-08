@@ -1,5 +1,6 @@
 //action - is an object with two properties - type and payload
 import * as actionTypes from '../actionTypes';
+import emailjs from '@emailjs/browser';
 import axios from 'axios';
 
 export const AddOrder = (order) => {
@@ -37,6 +38,8 @@ export const SaveOrderToDB = (order, accessToken) => {
       )
       .then((response) => {
         let loggedOrder = response.data;
+        console.log('Logged order is ' + loggedOrder);
+
         dispatch(AddOrder(loggedOrder));
         //alert('order has been submitted');
       })
@@ -118,6 +121,54 @@ export const getOrdersFromDB = (id, accessToken) => {
           'Error fetching order:',
           error.response ? error.response.data : error.message
         );
+      });
+  };
+};
+
+export const GenerateOrderPDF = (message, userEmail, accessToken) => {
+  // Set up config with authorization header
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  return (dispatch) => {
+    axios
+      .post(
+        `http://localhost:9000/order/api/generateOrderPDF/`,
+        { message },
+        config
+      )
+      .then((response) => {
+        let pdfResponse = response.data;
+        console.log('PDF generation response:', pdfResponse);
+        // handle email
+        emailjs.init(process.env.PUBLIC_KEY);
+
+        var params = {
+          sendername: 'ShoppingIT',
+          to: userEmail,
+          subject: 'Purchase Details',
+          message: 'find your purchase details here: ' + pdfResponse,
+        };
+
+        emailjs
+          .send(process.env.SERVICE_ID, process.env.TEMPLATE_ID, params)
+          .then((response) => {
+            console.log(
+              'Email sent successfully:',
+              response.status,
+              response.text
+            );
+            setEmailSent(true);
+          })
+          .catch((err) => {
+            console.error('Failed to send email:', err);
+          });
+      })
+      .catch((err) => {
+        console.log('Error while generating PDF:', err);
       });
   };
 };

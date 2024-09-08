@@ -9,6 +9,7 @@ export default class UserComponent extends Component {
     this.state = {
       userName: props.user.userName, // we need to read from store using props through container
       password: props.user.password,
+      email: props.user.email,
       street: props.user.street,
       mobile: props.user.mobile,
     };
@@ -23,6 +24,8 @@ export default class UserComponent extends Component {
       this.setState({ userName: value });
     } else if (classList.contains('pass')) {
       this.setState({ password: value });
+    } else if (classList.contains('email')) {
+      this.setState({ email: value });
     } else if (classList.contains('street')) {
       this.setState({ street: value });
     } else {
@@ -34,7 +37,7 @@ export default class UserComponent extends Component {
 
   loginUser = (evt) => {
     let newUser = this.state;
-    alert('Logged Innn -' + JSON.stringify(newUser));
+    alert('Logged In -' + JSON.stringify(newUser));
 
     //upon user action to login we send user to store
     //this.props.addUser(newUser);
@@ -68,6 +71,17 @@ export default class UserComponent extends Component {
                 className="form-control col-md-6 pass"
                 value={this.state.password}
                 placeholder="Password"
+                onChange={this.onTextChange}
+                maxLength={40}
+              />
+            </div>
+            <div className="col-md-12">
+              <b>Email</b>
+              <input
+                type="email"
+                className="form-control col-md-6 pass"
+                value={this.state.email}
+                placeholder="Email"
                 onChange={this.onTextChange}
                 maxLength={40}
               />
